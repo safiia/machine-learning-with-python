@@ -1,0 +1,2 @@
+# simple-linear-regression
+Use scikit-learn to implement simple linear regression on a dataset that is related to fuel consumption and Carbon dioxide emission of cars. Data is split into training and test sets. A model is created and trained on the training set. Then it is evaluated on the test set, and finally it is used to predict the CO2 emission for an unknown value.
