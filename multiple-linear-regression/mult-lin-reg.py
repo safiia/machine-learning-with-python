@@ -27,10 +27,8 @@ def split_train_test(cdf, ratio):
 
 def train_model(train, fuel):
     regr = linear_model.LinearRegression()
-    vars = [['ENGINESIZE', 'CYLINDERS'], fuel]
-    vars_flat = [item for sublist in vars for item in sublist]
-    print(vars_flat)
-    x = np.asanyarray(train[vars_flat])
+    vars = ['ENGINESIZE', 'CYLINDERS'] + fuel
+    x = np.asanyarray(train[vars])
     y = np.asanyarray(train[['CO2EMISSIONS']])
     regr.fit(x, y)
     print(f"Intercept: {regr.intercept_}")
@@ -39,9 +37,8 @@ def train_model(train, fuel):
 
 
 def predict(regr, test, fuel):
-    vars = [['ENGINESIZE', 'CYLINDERS'], fuel]
-    vars_flat = [item for sublist in vars for item in sublist]
-    x = np.asanyarray(test[vars_flat])
+    vars = ['ENGINESIZE', 'CYLINDERS'] + fuel
+    x = np.asanyarray(test[vars])
     y = np.asanyarray(test[['CO2EMISSIONS']])
     y_hat = regr.predict(x)
 
