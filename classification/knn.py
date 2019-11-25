@@ -4,6 +4,7 @@ import pandas
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
 
 
 def read_data(file_name):
@@ -27,10 +28,8 @@ def normalize_data(data):
 
     x = data[:, :-1]
     y = data[:, -1]
-    print(x[0:5])
 
     x = preprocessing.StandardScaler().fit(x).transform(x.astype(float))
-    print(x[0:5])
     return x, y
 
 
@@ -62,8 +61,26 @@ def train(x_train, y_train, k=4):
 
 
 def predict(neighbors, x_test):
+    """
+    Predict classes for the test set.
+    :param neighbors: KNeighborsClassifier object trained on training data
+    :param x_test: test data
+    :return:
+        y_hat: predicted classes for the test set
+    """
     y_hat = neighbors.predict(x_test)
     return y_hat
+
+
+def accuracy(y_test, y_hat):
+    """
+    Calculate the accuracy of the model.
+    :param y_test: True test set class labels.
+    :param y_hat: Predicted class labels for the test set.
+    :return:
+        the accuracy score of the model.
+    """
+    return accuracy_score(y_test, y_hat)
 
 
 if __name__ == '__main__':
@@ -73,4 +90,8 @@ if __name__ == '__main__':
 
     model4 = train(x_train, y_train)
     y_hat = predict(model4, x_test)
+    print(f"Model accuracy for k=4: {accuracy(y_test, y_hat)}")
 
+    model6 = train(x_train, y_train, k=6)
+    y_hat6 = predict(model6, x_test)
+    print(f"Model accuracy for k=6: {accuracy(y_test, y_hat6)}")
