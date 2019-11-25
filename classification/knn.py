@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 
 
 def read_data(file_name):
@@ -25,12 +26,28 @@ def normalize_data(data):
 
     x = data[:, :-1]
     y = data[:, -1]
+    print(x[0:5])
 
-    x = preprocessing.StandardScaler().fit(X).transform(X.astype(float))
+    x = preprocessing.StandardScaler().fit(x).transform(x.astype(float))
+    print(x[0:5])
     return x, y
+
+
+def split_data(x, y, train_size):
+    """
+    Split the data and the associated labels into training and test sets with a given proportionality.
+    :param x: data
+    :param y: labels
+    :param train_size: proportionality of the train data w.r.t. the whole data
+    :return:
+    """
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=train_size, random_state=4, shuffle=True)
+
+    return x_train, x_test, y_train, y_test
 
 
 if __name__ == '__main__':
     data = read_data("teleCust1000t.csv")
-    normalize_data(data)
-    # print(data.head())
+    norm_data = normalize_data(data)
+    x_train, x_test, y_train, y_test = split_data(norm_data[0], norm_data[1], 0.8)
