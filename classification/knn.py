@@ -83,6 +83,34 @@ def accuracy(y_test, y_hat):
     return accuracy_score(y_test, y_hat)
 
 
+def find_best_k(x_train, x_test, y_train, y_test):
+
+    num_k = 10
+    accuracies = np.zeros(num_k-1)
+    std_acc = np.zeros(num_k-1)
+
+    for k in range(1, num_k):
+        model = train(x_train, y_train, k=k)
+        y_hat = predict(model, x_test)
+        acc = accuracy(y_test, y_hat)
+        accuracies[k-1] = acc
+        std_acc[k - 1] = np.std(y_hat == y_test) / np.sqrt(y_hat.shape[0])
+
+    print(f"Highest accuracy is for k = {np.argmax(accuracies)} with acc = {np.max(accuracies)}")
+    return accuracies, std_acc
+
+
+def plot_accuracies(acc, std_acc):
+    num_k = 10
+    plt.plot(range(1, num_k), acc, 'g')
+    plt.fill_between(range(1, num_k), acc - 1 * std_acc, acc + 1 * std_acc, alpha=0.10)
+    plt.legend(('Accuracy ', '+/- 3xstd'))
+    plt.ylabel('Accuracy')
+    plt.xlabel('Number of Neighbors (k)')
+    plt.tight_layout()
+    plt.show()
+
+
 if __name__ == '__main__':
     data = read_data("teleCust1000t.csv")
     norm_data = normalize_data(data)
@@ -95,3 +123,6 @@ if __name__ == '__main__':
     model6 = train(x_train, y_train, k=6)
     y_hat6 = predict(model6, x_test)
     print(f"Model accuracy for k=6: {accuracy(y_test, y_hat6)}")
+
+    acc, std_acc = find_best_k(x_train, x_test, y_train, y_test)
+    plot_accuracies(acc, std_acc)
