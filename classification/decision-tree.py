@@ -49,6 +49,18 @@ def split_data(x, y, train_size):
     return x_train, x_test, y_train, y_test
 
 
+def train(x_train, y_train):
+    model = DecisionTreeClassifier(criterion='entropy', max_depth=4)
+    model.fit(x_train, y_train)
+
+    return model
+
+
+def predict(model, x_test):
+    y_hat = model.predict(x_test)
+    return y_hat
+
+
 if __name__ == '__main__':
     x, y = read_data("drug200.csv")
     x[:, 1] = preprocess_data(x[:, 1], ['F', 'M'])
@@ -56,5 +68,8 @@ if __name__ == '__main__':
     x[:, 3] = preprocess_data(x[:, 3], ['NORMAL', 'HIGH'])
 
     x_train, x_test, y_train, y_test = split_data(x, y, 0.7)
+
+    model = train(x_train, y_train)
+
 
 
