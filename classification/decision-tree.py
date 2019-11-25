@@ -1,12 +1,60 @@
 import numpy as np
 import pandas
 from sklearn.tree import DecisionTreeClassifier
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 
 
 def read_data(filename):
     data = pandas.read_csv(filename, delimiter=',')
-    return data
+    print(f"Size of the data: {data.shape}")
+
+    cols = data.columns
+    print(cols)
+
+    # print("Categorical attributes:\n", data['Sex'].value_counts())
+    # print("Categorical attributes:\n", data['BP'].value_counts())
+    # print("Categorical attributes:\n", data['Cholesterol'].value_counts())
+
+    data = data[cols].values
+    x = data[:, :-1]
+    y = data[:, -1]
+    return x, y
+
+
+def preprocess_data(col, values):
+    """
+    Since sklearn cannot process categorical data, we need to convert them to numerical values with sklearn.preprocessing.
+    :param col: input data column
+    :return:
+        transformed data column
+    """
+
+    le_col = preprocessing.LabelEncoder()
+    le_col.fit(values)
+    return le_col.transform(col)
+
+
+def split_data(x, y, train_size):
+    """
+    Split the data and the associated labels into training and test sets with a given proportionality.
+    :param x: data
+    :param y: labels
+    :param train_size: proportionality of the train data w.r.t. the whole data
+    :return:
+    """
+
+    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=train_size, random_state=3, shuffle=True)
+
+    return x_train, x_test, y_train, y_test
 
 
 if __name__ == '__main__':
-    data = read_data("drug200.csv")
+    x, y = read_data("drug200.csv")
+    x[:, 1] = preprocess_data(x[:, 1], ['F', 'M'])
+    x[:, 2] = preprocess_data(x[:, 2], ['LOW', 'NORMAL', 'HIGH'])
+    x[:, 3] = preprocess_data(x[:, 3], ['NORMAL', 'HIGH'])
+
+    x_train, x_test, y_train, y_test = split_data(x, y, 0.7)
+
+
