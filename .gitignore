@@ -1,0 +1,9 @@
+# ignore all .csv files
+*.csv
+
+# ignore all .txt files
+*.txt
+
+# ignore all compressed files
+*.zip
+*.tar 
