@@ -6,4 +6,7 @@
 
 # ignore all compressed files
 *.zip
-*.tar 
+*.tar
+
+# ignore pycharm additions
+*.idea 
